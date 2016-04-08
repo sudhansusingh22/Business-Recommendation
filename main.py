@@ -131,11 +131,6 @@ class MyCorpus(object):
     def __init__(self, fname, stopf = None, V = None):
         self.fname = fname
         self.file = open(fname, "r")
-        print self.file.readline()
-        listData = [x for x in self.file if '"business_id": "Ts4xsKPU7FNPPZRj-nRjIg"' in x]
-        with open("newfile.json", 'w') as outfile:
-            json.dumps(listData,outfile)
-        self.file = open("newfile.json", "r")
         stoplist = stopf
         print "make dictionary started"
         self.dictionary = self.make_dict(stoplist, V)
@@ -157,7 +152,7 @@ class MyCorpus(object):
         return dictionary
     def read_file(self):
         print "read_file"
-        for num,line in enumerate(self.file):
+        for line in self.file:
                 txt = json.loads(line)["text"]
                 if len(txt) > 5: yield txt
     
@@ -168,13 +163,17 @@ class MyCorpus(object):
             bow = self.dictionary.doc2bow(self.proc(line))
             if len(bow) >= 5: yield bow
 
-
-
 if __name__ == '__main__':
     stoplist = stopwords.words('english')
-    
-    yelp = MyCorpus('yelp_academic_dataset_review.json', stoplist, 20000)
-    K = 100
+    originalFile = open('yelp_academic_dataset_review.json',"rw+")
+    newFile = open("newfile.json","rw+")
+    for line in originalFile:
+        if '"business_id": "Ts4xsKPU7FNPPZRj-nRjIg"' in line:
+            newFile.write(line)
+    originalFile.close()
+    newFile.close()
+    yelp = MyCorpus('newfile.json', stoplist, 10000)
+    K = 5
     lda = models.ldamodel.LdaModel(corpus = yelp, id2word = yelp.dictionary, num_topics = K, update_every = 1, chunksize = 100000, passes = 3)
     print 'done'
     print lda.show_topics(K, formatted=True)
