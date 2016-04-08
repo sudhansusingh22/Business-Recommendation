@@ -131,7 +131,13 @@ class MyCorpus(object):
     def __init__(self, fname, stopf = None, V = None):
         self.fname = fname
         self.file = open(fname, "r")
+        print self.file.readline()
+        listData = [x for x in self.file if '"business_id": "Ts4xsKPU7FNPPZRj-nRjIg"' in x]
+        with open("newfile.json", 'w') as outfile:
+            json.dumps(listData,outfile)
+        self.file = open("newfile.json", "r")
         stoplist = stopf
+        print "make dictionary started"
         self.dictionary = self.make_dict(stoplist, V)
     def reset(self):
         self.file.seek(0)
@@ -140,19 +146,23 @@ class MyCorpus(object):
     def make_dict(self, stoplist = [], V = None):
         self.reset()
         # read all terms
+        print "Corpora.Dictionary"
         dictionary = corpora.Dictionary(self.proc(line) for line in self.read_file())
         # remove stop words
         stop_ids = [dictionary.token2id[sw] for sw in stoplist if sw in dictionary.token2id]
         dictionary.filter_tokens(stop_ids)
         # remove words which occur in less than 5 documents or more than 50% of documents
         dictionary.filter_extremes(keep_n = V)
+        print "Corpora.Dictionary end"
         return dictionary
     def read_file(self):
-        for line in self.file:
-            txt = json.loads(line)["text"]
-            if len(txt) > 5: yield txt
+        print "read_file"
+        for num,line in enumerate(self.file):
+                txt = json.loads(line)["text"]
+                if len(txt) > 5: yield txt
     
     def __iter__(self):
+        print "iter"
         self.reset()
         for line in self.read_file():
             bow = self.dictionary.doc2bow(self.proc(line))
@@ -162,9 +172,11 @@ class MyCorpus(object):
 
 if __name__ == '__main__':
     stoplist = stopwords.words('english')
+    
     yelp = MyCorpus('yelp_academic_dataset_review.json', stoplist, 20000)
     K = 100
     lda = models.ldamodel.LdaModel(corpus = yelp, id2word = yelp.dictionary, num_topics = K, update_every = 1, chunksize = 100000, passes = 3)
     print 'done'
-    print "\n".join(lda.show_topics(K, formatted=True))
+    print lda.show_topics(K, formatted=True)
+    
     lda.save("ldapy")
