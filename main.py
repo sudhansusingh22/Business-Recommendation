@@ -3,6 +3,7 @@ Created on Apr 8, 2016
 
 @author: achaluv
 '''
+'''
 # -*- coding: utf-8 -*-
 """Convert the Yelp Dataset Challenge dataset from json format to csv.
 For more information on the Yelp Dataset Challenge please visit http://yelp.com/dataset_challenge
@@ -119,10 +120,51 @@ if __name__ == '__main__':
 
     column_names = get_superset_of_column_names_from_file(json_file)
     read_and_write_file(json_file, csv_file, column_names)
+'''  
+
+
+from gensim import corpora, models
+from nltk.corpus import stopwords
+import json
+import re
+class MyCorpus(object):
+    def __init__(self, fname, stopf = None, V = None):
+        self.fname = fname
+        self.file = open(fname, "r")
+        stoplist = stopf
+        self.dictionary = self.make_dict(stoplist, V)
+    def reset(self):
+        self.file.seek(0)
+    def proc(self, line):
+        return filter(lambda x: len(x) > 2, map(lambda x: x.strip(), re.sub(r'[0-9]+|\W',' ',line.strip().lower()).split()))
+    def make_dict(self, stoplist = [], V = None):
+        self.reset()
+        # read all terms
+        dictionary = corpora.Dictionary(self.proc(line) for line in self.read_file())
+        # remove stop words
+        stop_ids = [dictionary.token2id[sw] for sw in stoplist if sw in dictionary.token2id]
+        dictionary.filter_tokens(stop_ids)
+        # remove words which occur in less than 5 documents or more than 50% of documents
+        dictionary.filter_extremes(keep_n = V)
+        return dictionary
+    def read_file(self):
+        for line in self.file:
+            txt = json.loads(line)["text"]
+            if len(txt) > 5: yield txt
     
-    
-def main():
-    
+    def __iter__(self):
+        self.reset()
+        for line in self.read_file():
+            bow = self.dictionary.doc2bow(self.proc(line))
+            if len(bow) >= 5: yield bow
+
+
 
 if __name__ == '__main__':
-    main()
+    stoplist = stopwords.words('english')
+    yelp = MyCorpus('yelp_academic_dataset_review.json', stoplist, 20000)
+    K = 100
+    lda = models.ldamodel.LdaModel(corpus = yelp, id2word = yelp.dictionary, num_topics = K, update_every = 1, chunksize = 100000, passes = 3)
+    print 'done'
+    print "\n".join(lda.show_topics(K, formatted=True))
+    lda.save("ldapy")
