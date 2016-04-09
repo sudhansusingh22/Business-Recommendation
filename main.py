@@ -1,7 +1,7 @@
 '''
 Created on Apr 8, 2016
 
-@author: achaluv
+@author: BI Team 23 NCSU
 '''
 '''
 # -*- coding: utf-8 -*-
