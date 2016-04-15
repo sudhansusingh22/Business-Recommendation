@@ -122,7 +122,24 @@ if __name__ == '__main__':
     read_and_write_file(json_file, csv_file, column_names)
 '''  
 
+import json
+import pandas as pd
+from glob import glob
 
+def convert(x):
+    ''' Convert a json string to a flat python dictionary
+    which can be passed into Pandas. '''
+    ob = json.loads(x)
+    for k, v in ob.items():
+        if isinstance(v, list):
+            ob[k] = ','.join(v)
+        elif isinstance(v, dict):
+            for kk, vv in v.items():
+                ob['%s_%s' % (k, kk)] = vv
+            del ob[k]
+    return ob
+
+    
 from gensim import corpora, models
 from nltk.corpus import stopwords
 import json
@@ -132,7 +149,7 @@ class MyCorpus(object):
         self.fname = fname
         self.file = open(fname, "r")
         stoplist = stopf
-        print "make dictionary started"
+        #print "make dictionary started"
         self.dictionary = self.make_dict(stoplist, V)
     def reset(self):
         self.file.seek(0)
@@ -141,23 +158,23 @@ class MyCorpus(object):
     def make_dict(self, stoplist = [], V = None):
         self.reset()
         # read all terms
-        print "Corpora.Dictionary"
+        #print "Corpora.Dictionary"
         dictionary = corpora.Dictionary(self.proc(line) for line in self.read_file())
         # remove stop words
         stop_ids = [dictionary.token2id[sw] for sw in stoplist if sw in dictionary.token2id]
         dictionary.filter_tokens(stop_ids)
         # remove words which occur in less than 5 documents or more than 50% of documents
         dictionary.filter_extremes(keep_n = V)
-        print "Corpora.Dictionary end"
+        #print "Corpora.Dictionary end"
         return dictionary
     def read_file(self):
-        print "read_file"
+        #print "read_file"
         for line in self.file:
                 txt = json.loads(line)["text"]
                 if len(txt) > 5: yield txt
     
     def __iter__(self):
-        print "iter"
+        #print "iter"
         self.reset()
         for line in self.read_file():
             bow = self.dictionary.doc2bow(self.proc(line))
@@ -166,18 +183,21 @@ class MyCorpus(object):
 if __name__ == '__main__':
     stoplist = stopwords.words('english')
     originalFile = open('yelp_academic_dataset_review.json',"rw+")
-    newFile = open("newfile.json","rw+")
+    json_new_filename = "newfile.json"
+    newFile = open(json_new_filename,"rw+")
     for line in originalFile:
         if '"business_id": "Ts4xsKPU7FNPPZRj-nRjIg"' in line:
             newFile.write(line)
     originalFile.close()
     newFile.close()
+    df = pd.DataFrame([convert(line) for line in file(json_new_filename)])
     yelp = MyCorpus('newfile.json', stoplist, 10000)
     K = 5
     for i in  yelp.dictionary:
 	print yelp.dictionary[i]
-    #lda = models.ldamodel.LdaModel(corpus = yelp, id2word = yelp.dictionary, num_topics = K, update_every = 1, chunksize = 100000, passes = 3)
-    print 'done'
+
+    lda = models.ldamodel.LdaModel(corpus = yelp, id2word = yelp.dictionary, num_topics = K, update_every = 1, chunksize = 100000, passes = 3)
+
     print lda.show_topics(K, formatted=True)
     
     lda.save("ldapy")
