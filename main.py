@@ -174,7 +174,9 @@ if __name__ == '__main__':
     newFile.close()
     yelp = MyCorpus('newfile.json', stoplist, 10000)
     K = 5
-    lda = models.ldamodel.LdaModel(corpus = yelp, id2word = yelp.dictionary, num_topics = K, update_every = 1, chunksize = 100000, passes = 3)
+    for i in  yelp.dictionary:
+	print yelp.dictionary[i]
+    #lda = models.ldamodel.LdaModel(corpus = yelp, id2word = yelp.dictionary, num_topics = K, update_every = 1, chunksize = 100000, passes = 3)
     print 'done'
     print lda.show_topics(K, formatted=True)
     
