@@ -125,6 +125,16 @@ if __name__ == '__main__':
 import json
 import pandas as pd
 from glob import glob
+import logging
+logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', 
+    level=logging.INFO)
+from gensim import corpora, models, similarities, matutils
+import numpy as np
+import scipy.stats as stats
+import matplotlib.pyplot as plt
+from nltk.corpus import stopwords
+import json
+import re
 
 def convert(x):
     ''' Convert a json string to a flat python dictionary
@@ -139,11 +149,6 @@ def convert(x):
             del ob[k]
     return ob
 
-    
-from gensim import corpora, models
-from nltk.corpus import stopwords
-import json
-import re
 class MyCorpus(object):
     def __init__(self, fname, stopf = None, V = None):
         self.fname = fname
@@ -182,22 +187,39 @@ class MyCorpus(object):
 
 if __name__ == '__main__':
     stoplist = stopwords.words('english')
-    originalFile = open('yelp_academic_dataset_review.json',"rw+")
-    json_new_filename = "newfile.json"
-    newFile = open(json_new_filename,"rw+")
-    for line in originalFile:
-        if '"business_id": "Ts4xsKPU7FNPPZRj-nRjIg"' in line:
-            newFile.write(line)
-    originalFile.close()
-    newFile.close()
-    df = pd.DataFrame([convert(line) for line in file(json_new_filename)])
-    yelp = MyCorpus('newfile.json', stoplist, 10000)
+    # originalFile = open('yelp_academic_dataset_review.json',"rw+")
+    # json_new_filename = "newfile.json"
+    # newFile = open(json_new_filename,"rw+")
+    # for line in originalFile:
+    #     if '"business_id": "Ts4xsKPU7FNPPZRj-nRjIg"' in line:
+    #         newFile.write(line)
+    # originalFile.close()
+    # newFile.close()
+    # df = pd.DataFrame([convert(line) for line in file(json_new_filename)])
+    yelp = MyCorpus('review_json_file_phoenix_restaurant.json', stoplist, 10000)
     K = 5
-    for i in  yelp.dictionary:
-	print yelp.dictionary[i]
+    # lda = model = np.array([sum(cnt for _, cnt in doc) for doc in my_corpus])ls.ldamodel.LdaModel(corpus = yelp, id2word = yelp.dictionary, num_topics = K, update_every = 1, chunksize = 100000, passes = 3)
+    kl = []
+    l = np.array([sum(cnt for _, cnt in doc) for doc in yelp])
+    for i in range(0,100,1):
+        lda = models.ldamodel.LdaModel(corpus = yelp, id2word = yelp.dictionary, num_topics = K, update_every = 1, chunksize = 100000, passes = 3)
+        m1 = lda.expElogbeta
+        U,cm1,V = np.linalg.svd(m1)
+        #Document-topic matrix
+        lda_topics = lda[yelp]
+        m2 = matutils.corpus2dense(lda_topics, lda.num_topics).transpose()
+        cm2 = l.dot(m2)
+        cm2 = cm2 + 0.0001
+        cm2norm = np.linalg.norm(l)
+        cm2 = cm2/cm2norm
+        kl.append(sym_kl(cm1,cm2))
 
-    lda = models.ldamodel.LdaModel(corpus = yelp, id2word = yelp.dictionary, num_topics = K, update_every = 1, chunksize = 100000, passes = 3)
+    # Plot the graph for KL convergence
+    plt.plot(kl)
+    plt.ylabel('Symmetric KL Divergence')
+    plt.xlabel('Number of Topics')
+    plt.savefig('kldiv.png', bbox_inches='tight')
 
-    print lda.show_topics(K, formatted=True)
+    # print lda.show_topics(K, formatted=True)
     
-    lda.save("ldapy")
+    # lda.save("ldapy")
