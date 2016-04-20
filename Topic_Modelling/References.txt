@@ -1,0 +1,14 @@
+http://mlwave.com/tutorial-online-lda-with-vowpal-wabbit/
+http://xmodulo.com/how-to-find-number-of-cpu-cores-on.html
+http://stackoverflow.com/questions/20886565/python-using-multiprocessing-process-with-a-maximum-number-of-simultaneous-pro
+    
+LDA Algorithm Explanation:
+http://blog.echen.me/2011/08/22/introduction-to-latent-dirichlet-allocation/
+https://wellecks.wordpress.com/2014/09/03/these-are-your-tweets-on-lda-part-i/
+http://stackoverflow.com/questions/10624760/latent-dirichlet-allocation-solution-example
+http://obphio.us/pdfs/lda_tutorial.pdf
+http://www.vladsandulescu.com/topic-prediction-lda-user-reviews/
+
+word cloud
+http://www.wordle.net/advanced
+https://www.quora.com/What-is-a-good-explanation-of-Latent-Dirichlet-Allocation

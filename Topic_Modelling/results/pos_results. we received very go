@@ -1,0 +1,21 @@
+went for breakfast on 6/16/14. we received very good service and meal came within a few minutes.waitress could have smiled more but was friendly. 
+i had a grand slam... it was more than enough food. 
+meal was very tasty... we will definitely go back. 
+it is a popular denny's.
+
+Porter
+[u'breakfast', u'receiv', u'servic', u'meal', u'minut', u'waitress', u'smile', u'friendli', u'slam', u'food', u'meal', u'tasti', u'denni', u's']
+Lancaster
+[u'breakfast', u'receiv', u'serv', u'meal', u'cam', u'minut', u'waitress', u'smil', u'friend', u'slam', u'food', u'meal', u'wil', u'definit', u'denny', u's']
+Snowball
+[u'breakfast', u'receiv', u'servic', u'meal', u'minut', u'waitress', u'smile', u'friend', u'slam', u'food', u'meal', u'tasti', u'denni', u's']
+lemmatize
+[u'breakfast', u'service', u'meal', u'minutes.waitress', u'slam', u'food', u'meal', u'tasty', u'denny']
+[u'breakfast', u'service', u'meal', u'minute', u'waitress', u'slam', u'food', u'meal', u'tasty', u'denny', u's']
+[u'breakfast', u'service', u'meal', u'minute', u'waitress', u'slam', u'food', u'meal', u'tasty', u'denny', u's']
+[u'breakfast', u'service', u'meal', u'minute', u'waitress', u'slam', u'food', u'meal', u'tasty', u'denny']
+
+Worker2: Done 15500 out of 15462 in 28418.03 sec ~ 0.55/sec
+Worker3: Done 15500 out of 15462 in 28432.18 sec ~ 0.55/sec
+Worker4: Done 15400 out of 15463 in 28438.96 sec ~ 0.54/sec
+Worker1: Done 15500 out of 15462 in 28500.76 sec ~ 0.54/sec
