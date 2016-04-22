@@ -7,15 +7,13 @@ import sys
 import __init__
 from settings import Settings
 from collections import Counter
-
+from get_collection import *
+from Topic_Modelling.get_collection import DBCollections, Constants
 
 dataset_file = Settings.DATASET_FILE
-reviews_collection = MongoClient(Settings.MONGO_CONNECTION_STRING)[Settings.REVIEWS_DATABASE][
-    Settings.REVIEWS_COLLECTION]
-reviews_collection.remove()
-business_collection = MongoClient(Settings.MONGO_CONNECTION_STRING)[Settings.REVIEWS_DATABASE][
-    Settings.BUSINESS_COLLECTION]
 
+reviews_collection = DBCollections.get_collection(Constants.REVIEW)
+business_collection = DBCollections.get_collection(Constants.BUSINESS)
 reviews_collection.remove()
 business_collection.remove()
 c = Counter()
@@ -29,27 +27,6 @@ with open(Settings.BUSINESS_DATA_FILE) as dataset:
                })
 
 print c.most_common(10)
-""""o = open(dataset_file,'rU')
-reader = csv.reader(o)
-row_count = sum(1 for row in reader)
-all_reviews = []
-with open(dataset_file, 'rb') as f:
-#     for i in range(len(bids)):
-        reader = csv.DictReader(f)
-#         id = bids[i]
-#         print id
-        rows = [row for row in reader if row['business_id'] == [id in bids]]
-        print len(rows)
-# all_reviews = []
-# with open(dataset_file, 'rb') as f:
-#     for bid in bids:
-#         reader = csv.DictReader(f)
-#         rows = [row for row in reader if row['business_id'] == str(bid)]
-#         print len(rows)
-#         all_reviews.extend(rows)
-    # row_count1 = sum(1 for row in filtered)
-print len(all_reviews)
-"""
 count = 0
 done = 02
 start = time.time()

@@ -23,7 +23,7 @@ class DBCollections(object):
             return DBCollections.reviews_collection
         elif collection_name == Constants.BUSINESS:
             return DBCollections.business_collection
-        elif collection_name == DBCollections.corpus_collection:
+        elif collection_name == Constants.CORPUS:
             return DBCollections.corpus_collection
         else:
             return None

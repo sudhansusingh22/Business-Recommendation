@@ -7,9 +7,15 @@ import nltk
 from pymongo import MongoClient
 from nltk.tokenize import RegexpTokenizer
 from settings import Settings
-tokenizer = RegexpTokenizer(r'\w{3,}')
 from stop_words import get_stop_words
-corpus_collection = MongoClient(Settings.MONGO_CONNECTION_STRING)[Settings.TAGS_DATABASE][Settings.CORPUS_COLLECTION]
+from get_collection import *
+
+# loading collections
+
+corpus_collection = DBCollections.get_collection(Constants.CORPUS)
+
+# create Tokenizer
+tokenizer = RegexpTokenizer(r'\w{3,}')
 
 
 def load_stopwords():
@@ -28,11 +34,7 @@ def worker(identifier, skip, count):
     done = 0
     start = time.time()
 
-    stopwords = load_stopwords()
-    reviews_collection = MongoClient(Settings.MONGO_CONNECTION_STRING)[Settings.REVIEWS_DATABASE][
-        Settings.REVIEWS_COLLECTION]
-    tags_collection = MongoClient(Settings.MONGO_CONNECTION_STRING)[Settings.TAGS_DATABASE][
-        Settings.REVIEWS_COLLECTION]
+    reviews_collection = DBCollections.get_collection(Constants.REVIEW)
     batch_size = 50
     for batch in range(0, count, batch_size):
         reviews_cursor = reviews_collection.find().skip(skip + batch).limit(batch_size)
@@ -59,8 +61,7 @@ def worker(identifier, skip, count):
 
 
 def main():
-    reviews_collection = MongoClient(Settings.MONGO_CONNECTION_STRING)[Settings.REVIEWS_DATABASE][
-        Settings.REVIEWS_COLLECTION]
+    reviews_collection = DBCollections.get_collection(Constants.REVIEW)
     reviews_cursor = reviews_collection.find()
     count = reviews_cursor.count()
     print count

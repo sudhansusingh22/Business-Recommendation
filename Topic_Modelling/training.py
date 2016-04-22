@@ -6,6 +6,7 @@ from gensim import corpora
 from pymongo import MongoClient
 
 from settings import Settings
+from Topic_Modelling.get_collection import DBCollections, Constants
 
 
 class Corpus(object):
@@ -56,13 +57,12 @@ class Train:
 def main():
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
-    dictionary_path = "models/dictionary.dict"
-    corpus_path = "models/corpus.lda-c"
-    lda_num_topics = 50
-    lda_model_path = "models/lda_model_50_topics.lda"
+    dictionary_path = Settings.Dictionary_path
+    corpus_path = Settings.Corpus_path
+    lda_num_topics = Settings.Lda_num_topics
+    lda_model_path = Settings.Lda_model_path
 
-    corpus_collection = MongoClient(Settings.MONGO_CONNECTION_STRING)[Settings.TAGS_DATABASE][
-        Settings.CORPUS_COLLECTION]
+    corpus_collection = DBCollections.get_collection(Constants.CORPUS)
     reviews_cursor = corpus_collection.find()
 
     dictionary = Dictionary(reviews_cursor, dictionary_path).build()
