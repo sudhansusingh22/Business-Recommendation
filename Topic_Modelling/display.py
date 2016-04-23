@@ -4,7 +4,6 @@ from gensim.models import LdaModel
 from gensim import corpora
 from settings import Settings
 from pymongo import MongoClient
-import unicodedata
 from nltk.tokenize import RegexpTokenizer
 tokenizer = RegexpTokenizer(r'\w{3,}')
 
@@ -16,7 +15,7 @@ logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=lo
 
 dictionary_path = "models/dictionary.dict"
 corpus_path = "models/corpus.lda-c"
-lda_num_topics = 23
+lda_num_topics = 6
 lda_model_path = "models/lda_model_50_topics.lda"
 
 dictionary = corpora.Dictionary.load(dictionary_path)
@@ -39,12 +38,12 @@ for topic in lda.show_topics(lda_num_topics):
             keyWord[key].append(elem.split("*")[1])
         #print keyWord[key]
         
-# topicAverageRating = [0 for elem in topics]
-# totalWordCount = [0 for elem in topics]
-# topicSum = [0 for elem in topics]
-# 
-# reviews_cursor = reviews_collection.find()
-#     
+topicAverageRating = [0 for elem in topics]
+totalWordCount = [0 for elem in topics]
+topicSum = [0 for elem in topics]
+ 
+reviews_cursor = reviews_collection.find()
+     
 # for dataPoint in reviews_cursor:
 #     #temp = unicodedata.normalize('NFKD', dataPoint['text']).encode('ascii','ignore')
 #     raw = dataPoint['text'].lower()
@@ -91,7 +90,6 @@ reviews_cursor = reviews_collection.find()
 #     print "review count ", element[0], element[1]
 
 for dataPoint in reviews_cursor:
-    #temp = unicodedata.normalize('NFKD', dataPoint['text']).encode('ascii','ignore')
     raw = dataPoint['text'].lower()
     tokens = tokenizer.tokenize(raw)
     for word in tokens:
@@ -104,7 +102,7 @@ for dataPoint in reviews_cursor:
                     totalWordCount[key] = totalWordCount[key] + 1
                 if totalWordCount[key] > 0:
                     topicAverageRating[key] = topicSum[key]/totalWordCount[key]
-                    
+
 
 businessRating = {}
 
@@ -130,15 +128,22 @@ for index in range(0,len(topics)):
         
 sortedbusinessRating = sorted(businessRating.items(), key=lambda value : value[1].averageRating)
 
+minRating = 5
+minIndex = 0
+minRatingCount = 0
+
 for element in sortedbusinessRating:
-    print element[0], element[1].averageRating, element[1].ratingCount
+    #print element[0], element[1].averageRating, element[1].ratingCount
+    if element[1].averageRating < minRating and element[1].ratingCount > 0:
+        minRating = element[1].averageRating
+        minIndex = element[0]
+        minRatingCount = element[1].ratingCount
 
-#print sortedbusinessRating
- 
-print '\n\n'
+
+print '\n'
 print "Feedback to business with ID - SsGNAc9U-aKPZccnaDtFkA"
-print 'Topic Number with max rating', ' ',sortedbusinessRating[0][0]
-print 'Max rating ', ' - ', sortedbusinessRating[0][1].averageRating, 'with count ', sortedbusinessRating[0][1].ratingCount
+print 'Topic Number with min rating', ' ',minIndex
+print 'Min rating ', ' - ', minRating, 'with count ', minRatingCount
 
-print 'Topic Number with min rating', ' ',sortedbusinessRating[-1][0]
-print 'Min rating ', ' - ', sortedbusinessRating[-1][1].averageRating, 'with count ', sortedbusinessRating[-1][1].ratingCount
+print 'Topic Number with max rating', ' ',sortedbusinessRating[-1][0]
+print 'Max rating ', ' - ', sortedbusinessRating[-1][1].averageRating, 'with count ', sortedbusinessRating[-1][1].ratingCount
