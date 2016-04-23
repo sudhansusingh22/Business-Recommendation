@@ -135,6 +135,7 @@ import matplotlib.pyplot as plt
 from nltk.corpus import stopwords
 import json
 import re
+import pylab
 
 def convert(x):
     ''' Convert a json string to a flat python dictionary
@@ -184,6 +185,9 @@ class MyCorpus(object):
         for line in self.read_file():
             bow = self.dictionary.doc2bow(self.proc(line))
             if len(bow) >= 5: yield bow
+# Define KL function
+def sym_kl(p,q):
+    return np.sum([stats.entropy(p,q),stats.entropy(q,p)])
 
 if __name__ == '__main__':
     stoplist = stopwords.words('english')
@@ -201,8 +205,8 @@ if __name__ == '__main__':
     # lda = model = np.array([sum(cnt for _, cnt in doc) for doc in my_corpus])ls.ldamodel.LdaModel(corpus = yelp, id2word = yelp.dictionary, num_topics = K, update_every = 1, chunksize = 100000, passes = 3)
     kl = []
     l = np.array([sum(cnt for _, cnt in doc) for doc in yelp])
-    for i in range(0,100,1):
-        lda = models.ldamodel.LdaModel(corpus = yelp, id2word = yelp.dictionary, num_topics = K, update_every = 1, chunksize = 100000, passes = 3)
+    for i in range(1,50,1):
+        lda = models.ldamodel.LdaModel(corpus = yelp, id2word = yelp.dictionary, num_topics = K, update_every = 1)#, chunksize = 100000, passes = 3
         m1 = lda.expElogbeta
         U,cm1,V = np.linalg.svd(m1)
         #Document-topic matrix
@@ -213,8 +217,12 @@ if __name__ == '__main__':
         cm2norm = np.linalg.norm(l)
         cm2 = cm2/cm2norm
         kl.append(sym_kl(cm1,cm2))
-
+    print kl
     # Plot the graph for KL convergence
+    plt.plot(kl)
+    plt.ylabel('Symmetric KL Divergence')
+    plt.xlabel('Number of Topics')
+    plt.show()
     plt.plot(kl)
     plt.ylabel('Symmetric KL Divergence')
     plt.xlabel('Number of Topics')

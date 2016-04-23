@@ -29,9 +29,9 @@ if __name__ == '__main__':
     businessJsonFileName = "yelp_academic_dataset_business.json"
     df = pd.DataFrame([convert(line) for line in file(businessJsonFileName)])
     df1 = df[["business_id","name","city",'categories']]
-    df2 = df1[df1.city == "Phoenix"]
+    df2 = df1[df1.city == "Scottsdale"]
     df2 = df2[df2['categories'].str.contains("Restaurant")]
-    print df2[:10]
+    #print df2[:10]
     #print df1[df1.business_id == 'Ts4xsKPU7FNPPZRj-nRjIg']
     business_id = df2['business_id'].tolist()
     #print df2[df2.business_id == 'Ts4xsKPU7FNPPZRj-nRjIg']
