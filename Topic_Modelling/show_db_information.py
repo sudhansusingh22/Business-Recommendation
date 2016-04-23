@@ -1,31 +1,26 @@
-from pymongo import MongoClient
-from settings import Settings
-import json
-from bson.json_util import dumps
-import make_json_serializable  # apply monkey-patch
-import simplejson as sjson
-from bson import json_util
-from get_collection import Constants,DBCollections
-# class Foo(object):
-#     def __init__(self, name):
-#         self.name = name
-#     def to_json(self):  # New special method.
-#         return "{u'name': %r}" % self.name.decode('utf-8')
+"""
+This class shows information about databases and the collections 
+"""
 
-# reviews_collection_bkp = MongoClient(Settings.MONGO_CONNECTION_STRING)[Settings.REVIEWS_DATABASE][
-#     Settings.REVIEWS_COLLECTION_BKP]
-# reviews_collection = MongoClient(Settings.MONGO_CONNECTION_STRING)[Settings.REVIEWS_DATABASE][
-#     Settings.REVIEWS_COLLECTION]
-# corpus_collection = MongoClient(Settings.MONGO_CONNECTION_STRING)[Settings.TAGS_DATABASE][Settings.CORPUS_COLLECTION]
-# corpus_collection_bkp = MongoClient(Settings.MONGO_CONNECTION_STRING)[Settings.TAGS_DATABASE][Settings.CORPUS_COLLECTION_BKP]
-# 
-# corpus_collection_pits = MongoClient(Settings.MONGO_CONNECTION_STRING)[Settings.TAGS_DATABASE][Settings.CORPUS_COLLECTION_PITTSBURG]
+from Topic_Modelling.db_objects import Constants,DBCollections
 
-# print tags_cursor.count()
-
-
+print "All Database present in MongoDB"
+print DBCollections.get_all_db_names()
+print
+print "All collections present in the database"
+print DBCollections.get_all_collections()
+print
+print "Review count"
 print DBCollections.get_collection(Constants.REVIEW).find().count()
-
+print
+print "Business Id Count"
+print DBCollections.get_collection(Constants.BUSINESS).find().count()
+print
+print "Corpus Collection Count"
+print DBCollections.get_collection(Constants.CORPUS).find().count()
+print
+print "Tags Collection Count"
+print DBCollections.get_collection(Constants.TAGS).find().count()
 
 
 # r_c = reviews_collection.find()

@@ -1,19 +1,17 @@
-import os
-import time
 import json
-from pymongo import MongoClient
-import csv
-import sys
-import __init__
-from settings import Settings
+import time
 from collections import Counter
-from get_collection import *
-from Topic_Modelling.get_collection import DBCollections, Constants
+from Topic_Modelling.settings import *
+from db_objects import *
 
 dataset_file = Settings.DATASET_FILE
 
 reviews_collection = DBCollections.get_collection(Constants.REVIEW)
 business_collection = DBCollections.get_collection(Constants.BUSINESS)
+
+print reviews_collection
+print business_collection
+
 reviews_collection.remove()
 business_collection.remove()
 c = Counter()
@@ -22,8 +20,8 @@ with open(Settings.BUSINESS_DATA_FILE) as dataset:
             data = json.loads(line)
             c[data["city"]]+= 1
             if 'Restaurants' in data["categories"] and data['city'] == 'Pittsburgh':
-               business_collection.insert({
-                 "_id": data["business_id"]
+                business_collection.insert({
+                                           "_id": data["business_id"]
                })
 
 print c.most_common(10)

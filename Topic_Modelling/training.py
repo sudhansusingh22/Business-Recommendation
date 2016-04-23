@@ -1,12 +1,13 @@
-import logging
+"""
+This file is used to train the LDA model with corpus documents
+"""
 
 import gensim
 from gensim.corpora import BleiCorpus
 from gensim import corpora
-from pymongo import MongoClient
 
 from settings import Settings
-from Topic_Modelling.get_collection import DBCollections, Constants
+from Topic_Modelling.db_objects import DBCollections, Constants
 
 
 class Corpus(object):
@@ -55,8 +56,7 @@ class Train:
 
 
 def main():
-    logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
-
+    DBCollections.start_logging()
     dictionary_path = Settings.Dictionary_path
     corpus_path = Settings.Corpus_path
     lda_num_topics = Settings.Lda_num_topics

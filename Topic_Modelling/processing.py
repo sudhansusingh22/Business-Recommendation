@@ -8,23 +8,25 @@ from pymongo import MongoClient
 from nltk.tokenize import RegexpTokenizer
 from settings import Settings
 from stop_words import get_stop_words
-from get_collection import *
+from Topic_Modelling.db_objects import *
 
 # loading collections
 
-corpus_collection = DBCollections.get_collection(Constants.CORPUS)
+corpus_collection = DBCollections.db_objects(Constants.CORPUS)
 
 # create Tokenizer
+
 tokenizer = RegexpTokenizer(r'\w{3,}')
 
 
 def load_stopwords():
     stopwords = []
-    with open('stopwords.txt', 'rU') as f:
+    with open('files/stopwords.txt', 'rU') as f:
         for line in f:
             stopwords.append(line.strip())
-
     return stopwords
+
+
 print load_stopwords()
 # create English stop words list
 en_stop = get_stop_words('en')
@@ -34,7 +36,7 @@ def worker(identifier, skip, count):
     done = 0
     start = time.time()
 
-    reviews_collection = DBCollections.get_collection(Constants.REVIEW)
+    reviews_collection = DBCollections.db_objects(Constants.REVIEW)
     batch_size = 50
     for batch in range(0, count, batch_size):
         reviews_cursor = reviews_collection.find().skip(skip + batch).limit(batch_size)
@@ -61,7 +63,7 @@ def worker(identifier, skip, count):
 
 
 def main():
-    reviews_collection = DBCollections.get_collection(Constants.REVIEW)
+    reviews_collection = DBCollections.db_objects(Constants.REVIEW)
     reviews_cursor = reviews_collection.find()
     count = reviews_cursor.count()
     print count
