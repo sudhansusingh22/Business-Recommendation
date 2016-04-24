@@ -26,7 +26,7 @@ class Settings:
     
     Dictionary_path = "models/dictionary.dict"
     Corpus_path = "models/corpus.lda-c"
-    Lda_num_topics = 23
+    Lda_num_topics = 6
     Lda_model_path = "models/lda_model_50_topics.lda"
     
     # Backup Collections
