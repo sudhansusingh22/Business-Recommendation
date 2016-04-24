@@ -2,7 +2,8 @@ from pymongo import MongoClient
 from settings import Settings
 
 """
-# Do not run this file 
+Do not run this file 
+This file is used to delete all the collections generated in  MongoDB
 """
 reviews_collection_bkp = MongoClient(Settings.MONGO_CONNECTION_STRING)[Settings.REVIEWS_DATABASE][Settings.REVIEWS_COLLECTION_BKP]
 reviews_collection = MongoClient(Settings.MONGO_CONNECTION_STRING)[Settings.REVIEWS_DATABASE][Settings.REVIEWS_COLLECTION]
