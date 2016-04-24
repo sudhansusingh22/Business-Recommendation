@@ -9,6 +9,10 @@ from gensim import corpora
 from settings import Settings
 from Topic_Modelling.db_objects import DBCollections, Constants
 
+"""
+Corpus class
+This class helps to create corpus dictionary objects which later on passed to the LDA model as input
+"""
 
 class Corpus(object):
     def __init__(self, cursor, reviews_dictionary, corpus_path):
@@ -26,6 +30,9 @@ class Corpus(object):
 
         return self
 
+"""
+Corpus dictionary class
+"""
 
 class Dictionary(object):
     def __init__(self, cursor, dictionary_path):
@@ -41,6 +48,10 @@ class Dictionary(object):
 
         return dictionary
 
+"""
+Train class
+This class has method run , which is called to train LDA model with the corpus dictionary objects as a document
+"""
 
 class Train:
     def __init__(self):
@@ -54,6 +65,11 @@ class Train:
 
         return lda
 
+""""
+main method:
+created corpus dictionary
+call the run method of the Train class to train the LDA model with dictionary objects as input.
+"""
 
 def main():
     DBCollections.start_logging()
