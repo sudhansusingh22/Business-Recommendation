@@ -10,11 +10,18 @@ from settings import Settings
 from stop_words import get_stop_words
 from Topic_Modelling.db_objects import *
 
-# loading collections
+# loading corpus collections
 
 corpus_collection = DBCollections.db_objects(Constants.CORPUS)
 
-# create Tokenizer
+"""
+create Tokenizer
+Based on this tokenizer we are filtering out the words which have length grater than 3 and train our model on this data,
+So that there would be less noise words in the document.
+But restricting the word size count to 3 will cause any performance issue in the LDA Model is an open question to us:
+Link to stackoverflow post:
+http://stackoverflow.com/questions/36673316/latent-dirichlet-allocationlda-performance-by-limiting-word-size-for-corpus-do
+"""
 
 tokenizer = RegexpTokenizer(r'\w{3,}')
 
@@ -28,9 +35,20 @@ def load_stopwords():
 
 
 print load_stopwords()
+
 # create English stop words list
+
 en_stop = get_stop_words('en')
+
+# create lemmatizer object
+
 lem = WordNetLemmatizer()
+
+
+"""
+This method runs on different cores of the system. While multiprocessing we have create 4 workers and tested our code to 
+run of 4 different cores of the system
+"""
 
 def worker(identifier, skip, count):
     done = 0
@@ -62,6 +80,14 @@ def worker(identifier, skip, count):
                 sys.stdout.flush()
 
 
+"""
+main method: calls the worker method on different cores of the system
+   
+number of workers should be equal to the number of cores available in the system
+http://xmodulo.com/how-to-find-number-of-cpu-cores-on.html
+http://stackoverflow.com/questions/20886565/python-using-multiprocessing-process-with-a-maximum-number-of-simultaneous-pro
+"""   
+
 def main():
     reviews_collection = DBCollections.db_objects(Constants.REVIEW)
     reviews_cursor = reviews_collection.find()
@@ -85,8 +111,5 @@ def main():
 
 if __name__ == '__main__':
     main()
-    
-# number of workers should be equal to the number of cores available in the system
-# http://xmodulo.com/how-to-find-number-of-cpu-cores-on.html
-# http://stackoverflow.com/questions/20886565/python-using-multiprocessing-process-with-a-maximum-number-of-simultaneous-pro
-    
+
+ 

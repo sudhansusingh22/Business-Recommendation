@@ -11,14 +11,27 @@ class Constants(object):
     BUSINESS = 'B'
     CORPUS = 'C'
     TAGS = 'T'
+"""
+This class include static methods to get the collection objects
+and fetch database informations.
+
+"""
     
 class DBCollections(object):
+    
+    """
+    fetch all collection objects from mongoDB and store it in varaibles
+    """
     
     corpus_collection = MongoClient(Settings.MONGO_CONNECTION_STRING)[Settings.TAGS_DATABASE][Settings.CORPUS_COLLECTION]
     reviews_collection = MongoClient(Settings.MONGO_CONNECTION_STRING)[Settings.REVIEWS_DATABASE][Settings.REVIEWS_COLLECTION]
     business_collection = MongoClient(Settings.MONGO_CONNECTION_STRING)[Settings.REVIEWS_DATABASE][Settings.BUSINESS_COLLECTION]
     tags_collection = MongoClient(Settings.MONGO_CONNECTION_STRING)[Settings.TAGS_DATABASE][Settings.REVIEWS_COLLECTION]
-
+    
+    """
+    This static method is a kind of factory method and returns the collection based on the collection name
+    """
+    
     @staticmethod
     def get_collection(collection_name):
         if collection_name == Constants.REVIEW:
