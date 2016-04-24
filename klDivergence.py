@@ -63,7 +63,7 @@ if __name__ == '__main__':
     kl = []
     l = np.array([sum(cnt for _, cnt in doc) for doc in yelp])
     # Find the list of KL divergences of different values of K(No. of Topics)
-    for i in range(1,2,1):
+    for i in range(1,50,1):
         lda = models.ldamodel.LdaModel(corpus = yelp, id2word = yelp.dictionary, num_topics = K, update_every = 1)#, chunksize = 100000, passes = 3
         m1 = lda.expElogbeta
         U,cm1,V = np.linalg.svd(m1)
