@@ -25,7 +25,7 @@ if __name__ == '__main__':
     # 
     
     #Load Bussiness Data from File to Pandas Dataframe
-    businessJsonFileName = "./dataset//yelp_academic_dataset_business.json"
+    businessJsonFileName = "./dataset/yelp_dataset_challenge_academic_dataset/yelp_academic_dataset_business.json"
     df = pd.DataFrame([convert(line) for line in file(businessJsonFileName)])
     #Filter out the required columns from dataframe
     df1 = df[["business_id","name","city",'categories']]
@@ -35,7 +35,7 @@ if __name__ == '__main__':
     #Save Business id into sets for review data filtering
     business_id = set(business_id)
 
-    reviewJsonFileName = "./dataset//yelp_academic_dataset_review.json"
+    reviewJsonFileName = "./dataset/yelp_dataset_challenge_academic_dataset/yelp_academic_dataset_review.json"
     finalReviewJsonFile = "review_json_file_pittsburgh_restaurant.json"
     outfile = open (finalReviewJsonFile,"w")
     data = []
