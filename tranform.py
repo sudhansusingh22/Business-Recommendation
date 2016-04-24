@@ -26,7 +26,7 @@ if __name__ == '__main__':
     
     # dfFiltered = df.ix[:,['business_id','text','stars']]
     # print dfFiltered
-    businessJsonFileName = "yelp_academic_dataset_business.json"
+    businessJsonFileName = "./dataset/yelp_dataset_challenge_academic_dataset/yelp_academic_dataset_business.json"
     df = pd.DataFrame([convert(line) for line in file(businessJsonFileName)])
     df1 = df[["business_id","name","city",'categories']]
     df2 = df1[df1.city == "Scottsdale"]
@@ -38,7 +38,7 @@ if __name__ == '__main__':
     # print business_id
     # reviewJsonFileName = "newfile.json"
     business_id = set(business_id)
-    reviewJsonFileName = "yelp_academic_dataset_review.json"
+    reviewJsonFileName = "./dataset/yelp_dataset_challenge_academic_dataset/yelp_academic_dataset_review.json"
     
     finalReviewJsonFile = "review_json_file_phoenix_restaurant.json"
     outfile = open (finalReviewJsonFile,"w")
