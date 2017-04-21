@@ -77,6 +77,7 @@ The topics that would be output from the program
 
 This can be summarised as the following chart:
 ![alt text](https://github.com/sudhansusingh22/Business-Recommendation/blob/master/chart.png) 
+
 The following  table shows  the average rating for the topics of business id -  
 ```
 SsGNAc9U-aKPZccnaDtFkA
