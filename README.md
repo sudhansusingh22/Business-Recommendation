@@ -60,7 +60,7 @@ Relevant File Informations:
 
 
 #### Project WorkFlow:
-![alt text](https://github.com/sudhansusingh22/Business-Recommendation/blob/master/flow.png) 
+![alt text](https://github.com/sudhansusingh22/Business-Recommendation/blob/master/flow.jpg) 
  
 
 #### Results:
@@ -81,7 +81,8 @@ The following  table shows  the average rating for the topics of business id -
 ```
 SsGNAc9U-aKPZccnaDtFkA
 ```
-![alt text](https://github.com/sudhansusingh22/Business-Recommendation/blob/master/table.png) 
+![alt text](https://github.com/sudhansusingh22/Business-Recommendation/blob/master/table.PNG) 
+
 The above results infer that the restaurant needs to improve on `Breakfast`.
 
 #### References:
